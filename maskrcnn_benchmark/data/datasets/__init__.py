@@ -1,6 +1,11 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 from .coco import COCODataset
-from .voc import PascalVOCDataset
 from .concat_dataset import ConcatDataset
+from .mosquitoes import MosquitoDataset
+from .voc import PascalVOCDataset
 
-__all__ = ["COCODataset", "ConcatDataset", "PascalVOCDataset"]
+# Set up custom environment before nearly anything else is imported
+# NOTE: this should be the first import (no not reorder)
+# noqa F401 isort:skip
+
+__all__ = ["COCODataset", "ConcatDataset", "PascalVOCDataset", "MosquitoDataset"]
