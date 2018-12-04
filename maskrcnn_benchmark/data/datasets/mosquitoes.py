@@ -6,7 +6,8 @@ from PIL import Image
 
 # from annotation import AnnotationImage
 from maskrcnn_benchmark.structures.bounding_box import BoxList
-from utils.files_utils import Directory
+
+# from utils.files_utils import Directory
 
 
 class MosquitoDataset(object):
@@ -28,6 +29,7 @@ class MosquitoDataset(object):
         if self.annotation_folder is not None:
             # look for annotation file
             annot_path = _find_annot_file(self.frames_list[idx], self.annotation_folder)
+            print('******{}********'.format(annot_path))
 
         if annot_path is not None:
             frame_number = _get_frame_number(self.frames_list[idx])
@@ -58,8 +60,11 @@ class MosquitoDataset(object):
         # we want to split the batches according to the aspect ratio
         # of the image, as it can be more efficient than loading the
         # image from disk
-        img_height = self.img.height
-        img_width = self.img.width
+        # img_height = self.img.height
+        # img_width = self.img.width
+        # TODO: hardcoded!
+        img_height = 1080
+        img_width = 1920
 
         return {"height": img_height, "width": img_width}
 
@@ -188,6 +193,42 @@ class AnnotationImage(object):
         return bboxes, labels
 
 
+class Directory(object):
+    @staticmethod
+    def get_files(root_dir, ext, recursive=False):
+        """Get files in the root_dir
+
+        Arguments:
+            root_dir {str} -- String directory to search for files.
+            ext {tuple} -- Tuple with extensions desired.
+
+        Keyword Arguments:
+            recursive {bool} -- Flag indicating whether to search files recursively or not. (default: {False})
+
+        Returns:
+            list -- list containing files pathes.
+        """
+
+        files = []
+
+        if recursive:
+
+            for (dirpath, dirnames, filenames) in os.walk(root_dir):
+
+                if len(filenames) == 0:
+                    continue
+
+                # getting only the  files with desired extensions
+                [
+                    files.append(os.path.join(dirpath, s)) for s in filenames
+                    if s.lower().endswith(ext)
+                ]
+        else:
+            [files.append(s) for s in os.listdir(root_dir) if s.lower().endswith(ext)]
+
+        return files
+
+
 def _find_annot_file(frame_path, annot_folder):
     """Find annotation file based on video name.
 
@@ -209,7 +250,6 @@ def _find_annot_file(frame_path, annot_folder):
             continue
 
         for file_name in filenames:
-
             if fnmatch.fnmatch(file_name, vid_filename + '.txt'):
                 annot_path = os.path.join(dirpath, file_name)
                 found = True

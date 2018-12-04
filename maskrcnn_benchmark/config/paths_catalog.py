@@ -27,7 +27,7 @@ class DatasetCatalog(object):
         "voc_2012_trainval": ("voc/VOC2012", 'trainval'),
         "voc_2012_val": ("voc/VOC2012", 'val'),
         "voc_2012_test": ("voc/VOC2012", 'test'),
-        "mosquitoes": ("mosquitoes/CEFET/VideoDataSet", 'CEFET/zframer-marcacoes')
+        "mosquitoes": ("mosquitoes/CEFET/VideoDataSet", 'mosquitoes/CEFET/zframer-marcacoes')
     }
 
     @staticmethod
@@ -59,7 +59,7 @@ class DatasetCatalog(object):
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
                 root_dir=os.path.join(data_dir, attrs[0]),
-                annotation_folder=attrs[1],
+                annotation_folder=os.path.join(data_dir, attrs[1]),
             )
             return dict(
                 factory="MosquitoDataset",
