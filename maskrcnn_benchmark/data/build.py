@@ -25,9 +25,7 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
         is_train (bool): whether to setup the dataset for training or testing
     """
     if not isinstance(dataset_list, (list, tuple)):
-        raise RuntimeError(
-            "dataset_list should be a list of strings, got {}".format(dataset_list)
-        )
+        raise RuntimeError("dataset_list should be a list of strings, got {}".format(dataset_list))
     datasets = []
     for dataset_name in dataset_list:
         data = dataset_catalog.get(dataset_name)
@@ -35,7 +33,7 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
         args = data["args"]
         # for COCODataset, we want to remove images without annotations
         # during training
-        if data["factory"] == "COCODataset":
+        if (data["factory"] == "COCODataset") or (data["factory"] == "MosquitoDataset"):
             args["remove_images_without_annotations"] = is_train
         if data["factory"] == "PascalVOCDataset":
             args["use_difficult"] = not is_train
@@ -82,25 +80,24 @@ def _compute_aspect_ratios(dataset):
     return aspect_ratios
 
 
-def make_batch_data_sampler(
-    dataset, sampler, aspect_grouping, images_per_batch, num_iters=None, start_iter=0
-):
+def make_batch_data_sampler(dataset,
+                            sampler,
+                            aspect_grouping,
+                            images_per_batch,
+                            num_iters=None,
+                            start_iter=0):
     if aspect_grouping:
         if not isinstance(aspect_grouping, (list, tuple)):
             aspect_grouping = [aspect_grouping]
         aspect_ratios = _compute_aspect_ratios(dataset)
         group_ids = _quantize(aspect_ratios, aspect_grouping)
         batch_sampler = samplers.GroupedBatchSampler(
-            sampler, group_ids, images_per_batch, drop_uneven=False
-        )
+            sampler, group_ids, images_per_batch, drop_uneven=False)
     else:
         batch_sampler = torch.utils.data.sampler.BatchSampler(
-            sampler, images_per_batch, drop_last=False
-        )
+            sampler, images_per_batch, drop_last=False)
     if num_iters is not None:
-        batch_sampler = samplers.IterationBasedBatchSampler(
-            batch_sampler, num_iters, start_iter
-        )
+        batch_sampler = samplers.IterationBasedBatchSampler(batch_sampler, num_iters, start_iter)
     return batch_sampler
 
 
@@ -108,18 +105,16 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0):
     num_gpus = get_world_size()
     if is_train:
         images_per_batch = cfg.SOLVER.IMS_PER_BATCH
-        assert (
-            images_per_batch % num_gpus == 0
-        ), "SOLVER.IMS_PER_BATCH ({}) must be divisible by the number "
+        assert (images_per_batch %
+                num_gpus == 0), "SOLVER.IMS_PER_BATCH ({}) must be divisible by the number "
         "of GPUs ({}) used.".format(images_per_batch, num_gpus)
         images_per_gpu = images_per_batch // num_gpus
         shuffle = True
         num_iters = cfg.SOLVER.MAX_ITER
     else:
         images_per_batch = cfg.TEST.IMS_PER_BATCH
-        assert (
-            images_per_batch % num_gpus == 0
-        ), "TEST.IMS_PER_BATCH ({}) must be divisible by the number "
+        assert (images_per_batch %
+                num_gpus == 0), "TEST.IMS_PER_BATCH ({}) must be divisible by the number "
         "of GPUs ({}) used.".format(images_per_batch, num_gpus)
         images_per_gpu = images_per_batch // num_gpus
         shuffle = False if not is_distributed else True
@@ -144,9 +139,7 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0):
     # but the code supports more general grouping strategy
     aspect_grouping = [1] if cfg.DATALOADER.ASPECT_RATIO_GROUPING else []
 
-    paths_catalog = import_file(
-        "maskrcnn_benchmark.config.paths_catalog", cfg.PATHS_CATALOG, True
-    )
+    paths_catalog = import_file("maskrcnn_benchmark.config.paths_catalog", cfg.PATHS_CATALOG, True)
     DatasetCatalog = paths_catalog.DatasetCatalog
     dataset_list = cfg.DATASETS.TRAIN if is_train else cfg.DATASETS.TEST
 
@@ -156,9 +149,8 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0):
     data_loaders = []
     for dataset in datasets:
         sampler = make_data_sampler(dataset, shuffle, is_distributed)
-        batch_sampler = make_batch_data_sampler(
-            dataset, sampler, aspect_grouping, images_per_gpu, num_iters, start_iter
-        )
+        batch_sampler = make_batch_data_sampler(dataset, sampler, aspect_grouping, images_per_gpu,
+                                                num_iters, start_iter)
         collator = BatchCollator(cfg.DATALOADER.SIZE_DIVISIBILITY)
         num_workers = cfg.DATALOADER.NUM_WORKERS
         data_loader = torch.utils.data.DataLoader(
