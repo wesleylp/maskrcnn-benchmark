@@ -80,7 +80,10 @@ class DatasetCatalog(object):
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
-        "mosquitoes": ("mosquitoes/CEFET/VideoDataSet", 'mosquitoes/CEFET/zframer-marcacoes')
+        "mosquitoes_CEFET_train": ("mosquitoes/CEFET/VideoDataSet/5m/Train",
+                                   'mosquitoes/CEFET/zframer-marcacoes'),
+        "mosquitoes_CEFET_test": ("mosquitoes/CEFET/VideoDataSet/5m/Test",
+                                  'mosquitoes/CEFET/zframer-marcacoes')
     }
 
     @staticmethod
