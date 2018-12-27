@@ -80,6 +80,14 @@ class DatasetCatalog(object):
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
+        "mosquitoes_CEFET_train_cocostyle": {
+            "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Train",
+            "ann_file": "mosquitoes/CEFET/VideoDataSet/5m/Train/coco_format_Train.json"
+        },
+        "mosquitoes_CEFET_test_cocostyle": {
+            "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Test",
+            "ann_file": "mosquitoes/CEFET/VideoDataSet/5m/Test/coco_format_Test.json"
+        },
         "mosquitoes_CEFET_train": ("mosquitoes/CEFET/VideoDataSet/5m/Train",
                                    'mosquitoes/CEFET/zframer-marcacoes'),
         "mosquitoes_CEFET_test": ("mosquitoes/CEFET/VideoDataSet/5m/Test",
@@ -110,17 +118,17 @@ class DatasetCatalog(object):
                 factory="PascalVOCDataset",
                 args=args,
             )
-        elif "mosquitoes" in name:
-            data_dir = DatasetCatalog.DATA_DIR
-            attrs = DatasetCatalog.DATASETS[name]
-            args = dict(
-                root_dir=os.path.join(data_dir, attrs[0]),
-                annotation_folder=os.path.join(data_dir, attrs[1]),
-            )
-            return dict(
-                factory="MosquitoDataset",
-                args=args,
-            )
+        # elif "mosquitoes" in name:
+        #     data_dir = DatasetCatalog.DATA_DIR
+        #     attrs = DatasetCatalog.DATASETS[name]
+        #     args = dict(
+        #         root_dir=os.path.join(data_dir, attrs[0]),
+        #         annotation_folder=os.path.join(data_dir, attrs[1]),
+        #     )
+        #     return dict(
+        #         factory="MosquitoDataset",
+        #         args=args,
+        #     )
 
         raise RuntimeError("Dataset not available: {}".format(name))
 
