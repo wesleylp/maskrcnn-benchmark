@@ -4,12 +4,12 @@ import copy
 import logging
 
 import torch.utils.data
+
 from maskrcnn_benchmark.utils.comm import get_world_size
 from maskrcnn_benchmark.utils.imports import import_file
 
 from . import datasets as D
 from . import samplers
-
 from .collate_batch import BatchCollator
 from .transforms import build_transforms
 
@@ -33,7 +33,7 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
         args = data["args"]
         # for COCODataset, we want to remove images without annotations
         # during training
-        if (data["factory"] == "COCODataset") or (data["factory"] == "MosquitoDataset"):
+        if (data["factory"] == "COCODataset") or (data["factory"] == "MosquitoesCOCODataset"):
             args["remove_images_without_annotations"] = is_train
         if data["factory"] == "PascalVOCDataset":
             args["use_difficult"] = not is_train

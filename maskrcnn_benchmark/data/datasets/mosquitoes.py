@@ -1,15 +1,17 @@
 import fnmatch
 import os
 import sys
-# sys.path.append('')
 
 import torch
 from PIL import Image
-from ..datasets.mosquitoes_utils.files_utils import Directory
-from ..datasets.mosquitoes_utils.annotation import AnnotationImage
 
 # from annotation import AnnotationImage
 from maskrcnn_benchmark.structures.bounding_box import BoxList
+
+from ..datasets.mosquitoes_utils.annotation import AnnotationImage
+from ..datasets.mosquitoes_utils.files_utils import Directory
+
+# sys.path.append('')
 
 
 class MosquitoDataset(object):
