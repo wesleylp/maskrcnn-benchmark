@@ -74,8 +74,8 @@ def convert_mosquitoes_instance_only(data_dir, ann_dir, out_dir):
     ann_id = 0
     cat_id = 1
     category_dict = {
-        '__background__': 0,
-        'tire': 1,
+        #'__background__': 0,
+        'tire': 0,
     }
 
     for data_set in sets:
@@ -117,8 +117,9 @@ def convert_mosquitoes_instance_only(data_dir, ann_dir, out_dir):
                         ann['id'] = ann_id
                         ann_id += 1
                         ann['image_id'] = image['id']
-
-                        ann['category_id'] = 1
+                        # FIXME: hardcoded
+                        # change when add more objects
+                        ann['category_id'] = 0
                         ann['iscrowd'] = 0
                         ann['area'] = box_area(box)
                         ann['bbox'] = xyxy_to_xywh(box)
