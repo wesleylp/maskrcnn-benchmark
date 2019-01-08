@@ -25,10 +25,10 @@ from maskrcnn_benchmark.utils.comm import get_rank, synchronize
 from maskrcnn_benchmark.utils.logger import setup_logger
 from maskrcnn_benchmark.utils.miscellaneous import mkdir
 
-# if you input size does not change to much
+# if you input size does not change too much
 # uncomment the line bellow to accelarate!
 # https://discuss.pytorch.org/t/what-does-torch-backends-cudnn-benchmark-do/5936/2
-# torch.backends.cudnn.benchmark = True
+torch.backends.cudnn.benchmark = True
 
 
 def train(cfg, local_rank, distributed):
