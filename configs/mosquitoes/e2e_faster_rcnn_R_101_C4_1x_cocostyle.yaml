@@ -1,6 +1,7 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
+  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-101"
+  BACKBONE: "R-101-C4"
   RPN:
     PRE_NMS_TOP_N_TRAIN: 1200
     PRE_NMS_TOP_N_TEST: 600
@@ -19,4 +20,4 @@ SOLVER:
   IMS_PER_BATCH: 2
 TEST:
   IMS_PER_BATCH: 2
-OUTPUT_DIR: "./results/e2e_faster_rcnn_R_50_C4_1x_cocostyle"
+OUTPUT_DIR: "./results/e2e_faster_rcnn_R_101_C4_1x_cocostyle"
