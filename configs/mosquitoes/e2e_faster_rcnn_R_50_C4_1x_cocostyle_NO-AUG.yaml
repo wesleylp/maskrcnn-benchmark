@@ -19,6 +19,6 @@ SOLVER:
   IMS_PER_BATCH: 2
 TEST:
   IMS_PER_BATCH: 2
-OUTPUT_DIR: "./e2e_faster_rcnn_R_50_C4_1x_cocostyle_NO-AUG"
+OUTPUT_DIR: "./results/e2e_faster_rcnn_R_50_C4_1x_cocostyle_NO-AUG"
 INPUT:
-  FLIP_PROB_TRAIN: 0
+  FLIP_PROB_TRAIN: 0.0
