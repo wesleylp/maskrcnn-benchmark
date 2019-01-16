@@ -16,10 +16,8 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from maskrcnn_benchmark.layers import FrozenBatchNorm2d
-from maskrcnn_benchmark.layers import Conv2d
+from maskrcnn_benchmark.layers import Conv2d, FrozenBatchNorm2d
 from maskrcnn_benchmark.utils.registry import Registry
-
 
 # ResNet stage specification
 StageSpec = namedtuple(
@@ -37,23 +35,31 @@ StageSpec = namedtuple(
 # ResNet-50 (including all stages)
 ResNet50StagesTo5 = tuple(
     StageSpec(index=i, block_count=c, return_features=r)
-    for (i, c, r) in ((1, 3, False), (2, 4, False), (3, 6, False), (4, 3, True))
-)
+    for (i, c, r) in ((1, 3, False), (2, 4, False), (3, 6, False), (4, 3, True)))
 # ResNet-50 up to stage 4 (excludes stage 5)
 ResNet50StagesTo4 = tuple(
     StageSpec(index=i, block_count=c, return_features=r)
-    for (i, c, r) in ((1, 3, False), (2, 4, False), (3, 6, True))
-)
+    for (i, c, r) in ((1, 3, False), (2, 4, False), (3, 6, True)))
 # ResNet-50-FPN (including all stages)
 ResNet50FPNStagesTo5 = tuple(
     StageSpec(index=i, block_count=c, return_features=r)
-    for (i, c, r) in ((1, 3, True), (2, 4, True), (3, 6, True), (4, 3, True))
-)
+    for (i, c, r) in ((1, 3, True), (2, 4, True), (3, 6, True), (4, 3, True)))
 # ResNet-101-FPN (including all stages)
 ResNet101FPNStagesTo5 = tuple(
     StageSpec(index=i, block_count=c, return_features=r)
-    for (i, c, r) in ((1, 3, True), (2, 4, True), (3, 23, True), (4, 3, True))
-)
+    for (i, c, r) in ((1, 3, True), (2, 4, True), (3, 23, True), (4, 3, True)))
+
+# added by wlpassos
+
+# ResNet-101 (including all stages)
+ResNet101StagesTo5 = tuple(
+    StageSpec(index=i, block_count=c, return_features=r)
+    for (i, c, r) in ((1, 3, False), (2, 4, False), (3, 23, False), (4, 3, True)))
+
+# ResNet-101 up to stage 4 (excludes stage 5)
+ResNet101StagesTo4 = tuple(
+    StageSpec(index=i, block_count=c, return_features=r)
+    for (i, c, r) in ((1, 3, False), (2, 4, False), (3, 23, True)))
 
 
 class ResNet(nn.Module):
@@ -82,7 +88,7 @@ class ResNet(nn.Module):
         self.return_features = {}
         for stage_spec in stage_specs:
             name = "layer" + str(stage_spec.index)
-            stage2_relative_factor = 2 ** (stage_spec.index - 1)
+            stage2_relative_factor = 2**(stage_spec.index - 1)
             bottleneck_channels = stage2_bottleneck_channels * stage2_relative_factor
             out_channels = stage2_out_channels * stage2_relative_factor
             module = _make_stage(
@@ -124,18 +130,18 @@ class ResNet(nn.Module):
 
 class ResNetHead(nn.Module):
     def __init__(
-        self,
-        block_module,
-        stages,
-        num_groups=1,
-        width_per_group=64,
-        stride_in_1x1=True,
-        stride_init=None,
-        res2_out_channels=256,
+            self,
+            block_module,
+            stages,
+            num_groups=1,
+            width_per_group=64,
+            stride_in_1x1=True,
+            stride_init=None,
+            res2_out_channels=256,
     ):
         super(ResNetHead, self).__init__()
 
-        stage2_relative_factor = 2 ** (stages[0].index - 1)
+        stage2_relative_factor = 2**(stages[0].index - 1)
         stage2_bottleneck_channels = num_groups * width_per_group
         out_channels = res2_out_channels * stage2_relative_factor
         in_channels = out_channels // 2
@@ -170,14 +176,14 @@ class ResNetHead(nn.Module):
 
 
 def _make_stage(
-    transformation_module,
-    in_channels,
-    bottleneck_channels,
-    out_channels,
-    block_count,
-    num_groups,
-    stride_in_1x1,
-    first_stride,
+        transformation_module,
+        in_channels,
+        bottleneck_channels,
+        out_channels,
+        block_count,
+        num_groups,
+        stride_in_1x1,
+        first_stride,
 ):
     blocks = []
     stride = first_stride
@@ -190,8 +196,7 @@ def _make_stage(
                 num_groups,
                 stride_in_1x1,
                 stride,
-            )
-        )
+            ))
         stride = 1
         in_channels = out_channels
     return nn.Sequential(*blocks)
@@ -199,22 +204,20 @@ def _make_stage(
 
 class BottleneckWithFixedBatchNorm(nn.Module):
     def __init__(
-        self,
-        in_channels,
-        bottleneck_channels,
-        out_channels,
-        num_groups=1,
-        stride_in_1x1=True,
-        stride=1,
+            self,
+            in_channels,
+            bottleneck_channels,
+            out_channels,
+            num_groups=1,
+            stride_in_1x1=True,
+            stride=1,
     ):
         super(BottleneckWithFixedBatchNorm, self).__init__()
 
         self.downsample = None
         if in_channels != out_channels:
             self.downsample = nn.Sequential(
-                Conv2d(
-                    in_channels, out_channels, kernel_size=1, stride=stride, bias=False
-                ),
+                Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
                 FrozenBatchNorm2d(out_channels),
             )
 
@@ -244,9 +247,7 @@ class BottleneckWithFixedBatchNorm(nn.Module):
         )
         self.bn2 = FrozenBatchNorm2d(bottleneck_channels)
 
-        self.conv3 = Conv2d(
-            bottleneck_channels, out_channels, kernel_size=1, bias=False
-        )
+        self.conv3 = Conv2d(bottleneck_channels, out_channels, kernel_size=1, bias=False)
         self.bn3 = FrozenBatchNorm2d(out_channels)
 
     def forward(self, x):
@@ -278,9 +279,7 @@ class StemWithFixedBatchNorm(nn.Module):
 
         out_channels = cfg.MODEL.RESNETS.STEM_OUT_CHANNELS
 
-        self.conv1 = Conv2d(
-            3, out_channels, kernel_size=7, stride=2, padding=3, bias=False
-        )
+        self.conv1 = Conv2d(3, out_channels, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = FrozenBatchNorm2d(out_channels)
 
     def forward(self, x):
@@ -291,9 +290,7 @@ class StemWithFixedBatchNorm(nn.Module):
         return x
 
 
-_TRANSFORMATION_MODULES = Registry({
-    "BottleneckWithFixedBatchNorm": BottleneckWithFixedBatchNorm
-})
+_TRANSFORMATION_MODULES = Registry({"BottleneckWithFixedBatchNorm": BottleneckWithFixedBatchNorm})
 
 _STEM_MODULES = Registry({"StemWithFixedBatchNorm": StemWithFixedBatchNorm})
 
@@ -301,5 +298,7 @@ _STAGE_SPECS = Registry({
     "R-50-C4": ResNet50StagesTo4,
     "R-50-C5": ResNet50StagesTo5,
     "R-50-FPN": ResNet50FPNStagesTo5,
+    "R-101-C4": ResNet101StagesTo4,
+    "R-101-C5": ResNet101StagesTo5,
     "R-101-FPN": ResNet101FPNStagesTo5,
 })

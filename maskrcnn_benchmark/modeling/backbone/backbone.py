@@ -10,6 +10,7 @@ from . import resnet
 
 
 @registry.BACKBONES.register("R-50-C4")
+@registry.BACKBONES.register("R-101-C4")
 def build_resnet_backbone(cfg):
     body = resnet.ResNet(cfg)
     model = nn.Sequential(OrderedDict([("body", body)]))
