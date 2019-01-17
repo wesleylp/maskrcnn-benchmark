@@ -140,6 +140,7 @@ C2_FORMAT_LOADER = Registry()
 
 
 @C2_FORMAT_LOADER.register("R-50-C4")
+@C2_FORMAT_LOADER.register("R-101-C4")
 @C2_FORMAT_LOADER.register("R-50-FPN")
 @C2_FORMAT_LOADER.register("R-101-FPN")
 def load_resnet_c2_format(cfg, f):
