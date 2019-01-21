@@ -47,7 +47,20 @@ def _rename_basic_resnet_weights(layer_keys):
     layer_keys = [k.replace(".branch1.", ".downsample.0.") for k in layer_keys]
     layer_keys = [k.replace(".branch1_bn.", ".downsample.1.") for k in layer_keys]
 
+    # GroupNorm
+    layer_keys = [k.replace("conv1.gn.s", "bn1.weight") for k in layer_keys]
+    layer_keys = [k.replace("conv1.gn.bias", "bn1.bias") for k in layer_keys]
+    layer_keys = [k.replace("conv2.gn.s", "bn2.weight") for k in layer_keys]
+    layer_keys = [k.replace("conv2.gn.bias", "bn2.bias") for k in layer_keys]
+    layer_keys = [k.replace("conv3.gn.s", "bn3.weight") for k in layer_keys]
+    layer_keys = [k.replace("conv3.gn.bias", "bn3.bias") for k in layer_keys]
+    layer_keys = [k.replace("downsample.0.gn.s", "downsample.1.weight") \
+        for k in layer_keys]
+    layer_keys = [k.replace("downsample.0.gn.bias", "downsample.1.bias") \
+        for k in layer_keys]
+
     return layer_keys
+
 
 def _rename_fpn_weights(layer_keys, stage_names):
     for mapped_idx, stage_name in enumerate(stage_names, 1):
@@ -55,16 +68,17 @@ def _rename_fpn_weights(layer_keys, stage_names):
         if mapped_idx < 4:
             suffix = ".lateral"
         layer_keys = [
-            k.replace("fpn.inner.layer{}.sum{}".format(stage_name, suffix), "fpn_inner{}".format(mapped_idx)) for k in layer_keys
+            k.replace("fpn.inner.layer{}.sum{}".format(stage_name, suffix),
+                      "fpn_inner{}".format(mapped_idx)) for k in layer_keys
         ]
-        layer_keys = [k.replace("fpn.layer{}.sum".format(stage_name), "fpn_layer{}".format(mapped_idx)) for k in layer_keys]
-
+        layer_keys = [
+            k.replace("fpn.layer{}.sum".format(stage_name), "fpn_layer{}".format(mapped_idx))
+            for k in layer_keys
+        ]
 
     layer_keys = [k.replace("rpn.conv.fpn2", "rpn.conv") for k in layer_keys]
     layer_keys = [k.replace("rpn.bbox_pred.fpn2", "rpn.bbox_pred") for k in layer_keys]
-    layer_keys = [
-        k.replace("rpn.cls_logits.fpn2", "rpn.cls_logits") for k in layer_keys
-    ]
+    layer_keys = [k.replace("rpn.cls_logits.fpn2", "rpn.cls_logits") for k in layer_keys]
 
     return layer_keys
 
@@ -140,13 +154,15 @@ C2_FORMAT_LOADER = Registry()
 
 
 @C2_FORMAT_LOADER.register("R-50-C4")
+@C2_FORMAT_LOADER.register("R-50-C5")
 @C2_FORMAT_LOADER.register("R-101-C4")
+@C2_FORMAT_LOADER.register("R-101-C5")
 @C2_FORMAT_LOADER.register("R-50-FPN")
 @C2_FORMAT_LOADER.register("R-101-FPN")
 def load_resnet_c2_format(cfg, f):
     state_dict = _load_c2_pickled_weights(f)
     conv_body = cfg.MODEL.BACKBONE.CONV_BODY
-    arch = conv_body.replace("-C4", "").replace("-FPN", "")
+    arch = conv_body.replace("-C4", "").replace("-C5", "").replace("-FPN", "")
     stages = _C2_STAGE_NAMES[arch]
     state_dict = _rename_weights_for_resnet(state_dict, stages)
     return dict(model=state_dict)
