@@ -12,6 +12,7 @@ from . import datasets as D
 from . import samplers
 from .collate_batch import BatchCollator
 from .transforms import build_transforms
+import numpy as np
 
 
 def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
@@ -158,6 +159,7 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0):
             num_workers=num_workers,
             batch_sampler=batch_sampler,
             collate_fn=collator,
+            worker_init_fn=_init_fn,
         )
         data_loaders.append(data_loader)
     if is_train:
@@ -165,3 +167,6 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0):
         assert len(data_loaders) == 1
         return data_loaders[0]
     return data_loaders
+
+def _init_fn(worker_id):
+    np.random.seed(42+worker_id)
