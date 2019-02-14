@@ -15,17 +15,17 @@ try:
 except:
     raise
 
-train_videos = [
-    'DJI00777',
-    'DJI00800',
-    'DJI00807',
-]
+# train_videos = [
+#     'DJI00777',
+#     'DJI00800',
+#     'DJI00807',
+# ]
 
-test_videos = [
-    'DJI00804',
-    'DJI00806',
-    'DJI00810',
-]
+# test_videos = [
+#     'DJI00804',
+#     'DJI00806',
+#     'DJI00810',
+# ]
 
 
 def parse_args():
