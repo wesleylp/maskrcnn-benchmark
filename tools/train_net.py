@@ -25,11 +25,20 @@ from maskrcnn_benchmark.utils.comm import get_rank, synchronize
 from maskrcnn_benchmark.utils.logger import setup_logger
 from maskrcnn_benchmark.utils.miscellaneous import mkdir
 
+import random 
+import numpy as np
+
 # if you input size does not change too much
 # uncomment the line bellow to accelarate!
 # https://discuss.pytorch.org/t/what-does-torch-backends-cudnn-benchmark-do/5936/2
-torch.backends.cudnn.benchmark = True
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
 
+torch.manual_seed(42)
+torch.cuda.manual_seed(42)
+torch.cuda.manual_seed_all(42)
+random.seed(42)
+np.random.seed(42)
 
 def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
