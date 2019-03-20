@@ -88,6 +88,14 @@ class DatasetCatalog(object):
             "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Test",
             "ann_file": "mosquitoes/CEFET/VideoDataSet/5m/Test/coco_format_Test.json"
         },
+        "mosquitoes_cocostyle_noaug_test": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_noaug_train": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Train",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/coco_format_Train.json"
+        },
         "mosquitoes_CEFET_train": ("mosquitoes/CEFET/VideoDataSet/5m/Train",
                                    'mosquitoes/CEFET/zframer-marcacoes'),
         "mosquitoes_CEFET_test": ("mosquitoes/CEFET/VideoDataSet/5m/Test",

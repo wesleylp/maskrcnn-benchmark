@@ -1,0 +1,24 @@
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
+  RPN:
+    PRE_NMS_TOP_N_TRAIN: 600
+    PRE_NMS_TOP_N_TEST: 300
+    POST_NMS_TOP_N_TRAIN: 50
+    POST_NMS_TOP_N_TEST: 50
+  ROI_BOX_HEAD:
+    NUM_CLASSES: 2
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 64
+DATASETS:
+  TRAIN: ("mosquitoes_cocostyle_noaug_train",)
+  TEST: ("mosquitoes_cocostyle_noaug_test")
+SOLVER:
+  BASE_LR: 0.005
+  WEIGHT_DECAY: 0.0001
+  STEPS: (12000, 16000)
+  MAX_ITER: 18000
+  IMS_PER_BATCH: 4
+TEST:
+  IMS_PER_BATCH: 4
+OUTPUT_DIR: "./results/aug/e2e_faster_rcnn_R_50_C4_1x_cocostyle_flip"
