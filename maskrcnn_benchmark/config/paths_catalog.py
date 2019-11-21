@@ -80,6 +80,18 @@ class DatasetCatalog(object):
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
+	 "mosquitoes_cocostyle_noaug_rectified_DJI_0033": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0033",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0033/coco_format_rectfied_DJI_0033.json"
+        },
+	"mosquitoes_cocostyle_noaug_rectified_DJI_0038": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0038",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0038/coco_format_rectfied_DJI_0038.json"
+        },
+	"mosquitoes_cocostyle_noaug_rectified_DJI_0043": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0043",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0043/coco_format_rectfied_DJI_0043.json"
+        },
         "mosquitoes_cocostyle_noaug_test": {
             "img_dir": "mosquitoes/data_aug/no_aug/Test",
             "ann_file": "mosquitoes/data_aug/no_aug/Test/coco_format_Test.json"
@@ -87,6 +99,34 @@ class DatasetCatalog(object):
         "mosquitoes_cocostyle_noaug_train": {
             "img_dir": "mosquitoes/data_aug/no_aug/Train",
             "ann_file": "mosquitoes/data_aug/no_aug/Train/coco_format_Train.json"
+        },
+	"mosquitoes_cocostyle_balanced_train": {
+            "img_dir": "mosquitoes/data_aug/mix/Train",
+            "ann_file": "mosquitoes/data_aug/mix/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_blur_test": {
+            "img_dir": "mosquitoes/data_aug/blur/Test",
+            "ann_file": "mosquitoes/data_aug/blur/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_blur_train": {
+            "img_dir": "mosquitoes/data_aug/blur/Train",
+            "ann_file": "mosquitoes/data_aug/blur/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_blend_test": {
+            "img_dir": "mosquitoes/data_aug/blend/Test",
+            "ann_file": "mosquitoes/data_aug/blend/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_blend_train": {
+            "img_dir": "mosquitoes/data_aug/blend/Train",
+            "ann_file": "mosquitoes/data_aug/blend/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_paste_test": {
+            "img_dir": "mosquitoes/data_aug/paste/Test",
+            "ann_file": "mosquitoes/data_aug/paste/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_paste_train": {
+            "img_dir": "mosquitoes/data_aug/paste/Train",
+            "ann_file": "mosquitoes/data_aug/paste/Train/coco_format_Train.json"
         },
         "mosquitoes_cocostyle_CEFET_train": {
             "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Train",
