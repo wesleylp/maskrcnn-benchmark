@@ -147,6 +147,66 @@ class DatasetCatalog(object):
             "mode": "mask",
             "mini": 10,
         },
+        "mosquitoes_cocostyle_noaug_rectified_DJI_0033": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0033",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0033/coco_format_rectfied_DJI_0033.json"
+        },
+        "mosquitoes_cocostyle_noaug_rectified_DJI_0038": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0038",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0038/coco_format_rectfied_DJI_0038.json"
+        },
+        "mosquitoes_cocostyle_noaug_rectified_DJI_0043": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0043",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/rectfied_DJI_0043/coco_format_rectfied_DJI_0043.json"
+        },
+        "mosquitoes_cocostyle_noaug_test": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Test",
+            "ann_file": "mosquitoes/data_aug/no_aug/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_noaug_train": {
+            "img_dir": "mosquitoes/data_aug/no_aug/Train",
+            "ann_file": "mosquitoes/data_aug/no_aug/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_balanced_train": {
+                "img_dir": "mosquitoes/data_aug/mix/Train",
+                "ann_file": "mosquitoes/data_aug/mix/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_blur_test": {
+            "img_dir": "mosquitoes/data_aug/blur/Test",
+            "ann_file": "mosquitoes/data_aug/blur/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_blur_train": {
+            "img_dir": "mosquitoes/data_aug/blur/Train",
+            "ann_file": "mosquitoes/data_aug/blur/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_blend_test": {
+            "img_dir": "mosquitoes/data_aug/blend/Test",
+            "ann_file": "mosquitoes/data_aug/blend/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_blend_train": {
+            "img_dir": "mosquitoes/data_aug/blend/Train",
+            "ann_file": "mosquitoes/data_aug/blend/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_paste_test": {
+            "img_dir": "mosquitoes/data_aug/paste/Test",
+            "ann_file": "mosquitoes/data_aug/paste/Test/coco_format_Test.json"
+        },
+        "mosquitoes_cocostyle_paste_train": {
+            "img_dir": "mosquitoes/data_aug/paste/Train",
+            "ann_file": "mosquitoes/data_aug/paste/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_CEFET_train": {
+            "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Train",
+            "ann_file": "mosquitoes/CEFET/VideoDataSet/5m/Train/coco_format_Train.json"
+        },
+        "mosquitoes_cocostyle_CEFET_test": {
+            "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Test",
+            "ann_file": "mosquitoes/CEFET/VideoDataSet/5m/Test/coco_format_Test.json"
+        },
+        "mosquitoes_CEFET_train": ("mosquitoes/CEFET/VideoDataSet/5m/Train",
+                                   'mosquitoes/CEFET/zframer-marcacoes'),
+        "mosquitoes_CEFET_test": ("mosquitoes/CEFET/VideoDataSet/5m/Test",
+                                  'mosquitoes/CEFET/zframer-marcacoes')
     }
 
     @staticmethod

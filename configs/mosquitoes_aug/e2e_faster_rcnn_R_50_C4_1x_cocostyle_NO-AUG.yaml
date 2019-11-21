@@ -1,6 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
+  WEIGHT: "results/aug/e2e_faster_rcnn_R_50_C4_1x_cocostyle_NO-AUG/model_final.pth"
   RPN:
     PRE_NMS_TOP_N_TRAIN: 600
     PRE_NMS_TOP_N_TEST: 300
@@ -12,7 +12,7 @@ MODEL:
     BATCH_SIZE_PER_IMAGE: 64
 DATASETS:
   TRAIN: ("mosquitoes_cocostyle_noaug_train",)
-  TEST: ("mosquitoes_cocostyle_noaug_test")
+  TEST: ("mosquitoes_cocostyle_noaug_rectified_DJI_0033", "mosquitoes_cocostyle_noaug_rectified_DJI_0038", "mosquitoes_cocostyle_noaug_rectified_DJI_0043",)
 SOLVER:
   BASE_LR: 0.005
   WEIGHT_DECAY: 0.0001
