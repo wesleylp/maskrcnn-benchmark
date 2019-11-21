@@ -2,11 +2,20 @@
 """Centralized catalog of paths."""
 
 import os
+from copy import deepcopy
 
 
 class DatasetCatalog(object):
     DATA_DIR = "datasets"
     DATASETS = {
+        "coco_2017_train": {
+            "img_dir": "coco/train2017",
+            "ann_file": "coco/annotations/instances_train2017.json"
+        },
+        "coco_2017_val": {
+            "img_dir": "coco/val2017",
+            "ann_file": "coco/annotations/instances_val2017.json"
+        },
         "coco_2014_train": {
             "img_dir": "coco/train2014",
             "ann_file": "coco/annotations/instances_train2014.json"
@@ -22,6 +31,22 @@ class DatasetCatalog(object):
         "coco_2014_valminusminival": {
             "img_dir": "coco/val2014",
             "ann_file": "coco/annotations/instances_valminusminival2014.json"
+        },
+        "keypoints_coco_2014_train": {
+            "img_dir": "coco/train2014",
+            "ann_file": "coco/annotations/person_keypoints_train2014.json",
+        },
+        "keypoints_coco_2014_val": {
+            "img_dir": "coco/val2014",
+            "ann_file": "coco/annotations/person_keypoints_val2014.json"
+        },
+        "keypoints_coco_2014_minival": {
+            "img_dir": "coco/val2014",
+            "ann_file": "coco/annotations/person_keypoints_minival2014.json",
+        },
+        "keypoints_coco_2014_valminusminival": {
+            "img_dir": "coco/val2014",
+            "ann_file": "coco/annotations/person_keypoints_valminusminival2014.json",
         },
         "voc_2007_train": {
             "data_dir": "voc/VOC2007",
@@ -68,6 +93,9 @@ class DatasetCatalog(object):
             "split": "test"
             # PASCAL VOC2012 doesn't made the test annotations available, so there's no json annotation
         },
+
+        ##############################################
+        # These ones are deprecated, should be removed
         "cityscapes_fine_instanceonly_seg_train_cocostyle": {
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_train.json"
@@ -80,26 +108,45 @@ class DatasetCatalog(object):
             "img_dir": "cityscapes/images",
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
-        "mosquitoes_cocostyle_noaug_test": {
-            "img_dir": "mosquitoes/data_aug/no_aug/Test",
-            "ann_file": "mosquitoes/data_aug/no_aug/Test/coco_format_Test.json"
+        ##############################################
+        "cityscapes_poly_instance_train": {
+            "img_dir": "cityscapes/leftImg8bit/",
+            "ann_dir": "cityscapes/gtFine/",
+            "split": "train",
+            "mode": "poly",
         },
-        "mosquitoes_cocostyle_noaug_train": {
-            "img_dir": "mosquitoes/data_aug/no_aug/Train",
-            "ann_file": "mosquitoes/data_aug/no_aug/Train/coco_format_Train.json"
+        "cityscapes_poly_instance_val": {
+            "img_dir": "cityscapes/leftImg8bit",
+            "ann_dir": "cityscapes/gtFine",
+            "split": "val",
+            "mode": "poly",
         },
-        "mosquitoes_cocostyle_CEFET_train": {
-            "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Train",
-            "ann_file": "mosquitoes/CEFET/VideoDataSet/5m/Train/coco_format_Train.json"
+        "cityscapes_poly_instance_minival": {
+            "img_dir": "cityscapes/leftImg8bit",
+            "ann_dir": "cityscapes/gtFine",
+            "split": "val",
+            "mode": "poly",
+            "mini": 10,
         },
-        "mosquitoes_cocostyle_CEFET_test": {
-            "img_dir": "mosquitoes/CEFET/VideoDataSet/5m/Test",
-            "ann_file": "mosquitoes/CEFET/VideoDataSet/5m/Test/coco_format_Test.json"
+        "cityscapes_mask_instance_train": {
+            "img_dir": "cityscapes/leftImg8bit/",
+            "ann_dir": "cityscapes/gtFine/",
+            "split": "train",
+            "mode": "mask",
         },
-        "mosquitoes_CEFET_train": ("mosquitoes/CEFET/VideoDataSet/5m/Train",
-                                   'mosquitoes/CEFET/zframer-marcacoes'),
-        "mosquitoes_CEFET_test": ("mosquitoes/CEFET/VideoDataSet/5m/Test",
-                                  'mosquitoes/CEFET/zframer-marcacoes')
+        "cityscapes_mask_instance_val": {
+            "img_dir": "cityscapes/leftImg8bit",
+            "ann_dir": "cityscapes/gtFine",
+            "split": "val",
+            "mode": "mask",
+        },
+        "cityscapes_mask_instance_minival": {
+            "img_dir": "cityscapes/leftImg8bit",
+            "ann_dir": "cityscapes/gtFine",
+            "split": "val",
+            "mode": "mask",
+            "mini": 10,
+        },
     }
 
     @staticmethod
@@ -137,7 +184,12 @@ class DatasetCatalog(object):
                 factory="PascalVOCDataset",
                 args=args,
             )
-
+        elif "cityscapes" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = deepcopy(DatasetCatalog.DATASETS[name])
+            attrs["img_dir"] = os.path.join(data_dir, attrs["img_dir"])
+            attrs["ann_dir"] = os.path.join(data_dir, attrs["ann_dir"])
+            return dict(factory="CityScapesDataset", args=attrs)
         raise RuntimeError("Dataset not available: {}".format(name))
 
 
@@ -151,7 +203,7 @@ class ModelCatalog(object):
         "FAIR/20171220/X-101-32x8d": "ImageNetPretrained/20171220/X-101-32x8d.pkl",
     }
 
-    C2_DETECTRON_SUFFIX = "output/train/coco_2014_train%3Acoco_2014_valminusminival/generalized_rcnn/model_final.pkl"
+    C2_DETECTRON_SUFFIX = "output/train/{}coco_2014_train%3A{}coco_2014_valminusminival/generalized_rcnn/model_final.pkl"
     C2_DETECTRON_MODELS = {
         "35857197/e2e_faster_rcnn_R-50-C4_1x": "01_33_49.iAX0mXvW",
         "35857345/e2e_faster_rcnn_R-50-FPN_1x": "01_36_30.cUF7QR7I",
@@ -161,6 +213,9 @@ class ModelCatalog(object):
         "35858933/e2e_mask_rcnn_R-50-FPN_1x": "01_48_14.DzEQe4wC",
         "35861795/e2e_mask_rcnn_R-101-FPN_1x": "02_31_37.KqyEK4tT",
         "36761843/e2e_mask_rcnn_X-101-32x8d-FPN_1x": "06_35_59.RZotkLKI",
+        "37129812/e2e_mask_rcnn_X-152-32x8d-FPN-IN5k_1.44x": "09_35_36.8pzTQKYK",
+        # keypoints
+        "37697547/e2e_keypoint_rcnn_R-50-FPN_1x": "08_42_54.kdzV35ao"
     }
 
     @staticmethod
@@ -185,7 +240,8 @@ class ModelCatalog(object):
         # prefix/<model_id>/2012_2017_baselines/<model_name>.yaml.<signature>/suffix
         # we use as identifiers in the catalog Caffe2Detectron/COCO/<model_id>/<model_name>
         prefix = ModelCatalog.S3_C2_DETECTRON_URL
-        suffix = ModelCatalog.C2_DETECTRON_SUFFIX
+        dataset_tag = "keypoints_" if "keypoint" in name else ""
+        suffix = ModelCatalog.C2_DETECTRON_SUFFIX.format(dataset_tag, dataset_tag)
         # remove identification prefix
         name = name[len("Caffe2Detectron/COCO/"):]
         # split in <model_id> and <model_name>

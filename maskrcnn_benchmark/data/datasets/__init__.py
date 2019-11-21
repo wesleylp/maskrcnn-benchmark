@@ -1,4 +1,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+
+from .abstract import AbstractDataset
+from .cityscapes import CityScapesDataset
 from .coco import COCODataset
 from .concat_dataset import ConcatDataset
 from .mosquitoes import MosquitoDataset
@@ -10,5 +13,11 @@ from .voc import PascalVOCDataset
 # noqa F401 isort:skip
 
 __all__ = [
-    "COCODataset", "ConcatDataset", "PascalVOCDataset", "MosquitoDataset", "MosquitoesCOCODataset"
+    "COCODataset",
+    "ConcatDataset",
+    "PascalVOCDataset",
+    "AbstractDataset",
+    "CityScapesDataset",
+    "MosquitoDataset",
+    "MosquitoesCOCODataset",
 ]
